@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import GaugeChart from "react-gauge-chart";
-import { db } from "@/lib/firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { db, auth } from "@/lib/firebase";
+import { doc, setDoc, addDoc, collection, getDoc } from "firebase/firestore";
 
-export default function StressMeter({ userId }) {
-  const [level, setLevel] = useState(0.5); // target slider
+export default function StressMeter() {
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("uid") || auth.currentUser?.uid; // get UID from query or current user
+  const [level, setLevel] = useState(0.5); // slider target
   const [displayLevel, setDisplayLevel] = useState(0.5); // animated needle
   const [saving, setSaving] = useState(false);
   const [emoji, setEmoji] = useState("😐");
@@ -16,6 +18,8 @@ export default function StressMeter({ userId }) {
 
   // Load previous stress level from Firestore
   useEffect(() => {
+    if (!userId) return;
+
     const loadStress = async () => {
       try {
         const docRef = doc(db, "stressLevels", userId);
@@ -29,6 +33,7 @@ export default function StressMeter({ userId }) {
         console.error("Error loading stress level:", err);
       }
     };
+
     loadStress();
   }, [userId]);
 
@@ -62,11 +67,30 @@ export default function StressMeter({ userId }) {
 
   // Save stress level to Firestore
   const handleSave = async () => {
+    if (!userId) {
+      alert("User not found! Please login.");
+      return;
+    }
+
     try {
       setSaving(true);
       const stressLevel = Math.round(level * 10); // scale 0-10
-      const docRef = doc(db, "stressLevels", userId);
-      await setDoc(docRef, { stressLevel, updatedAt: new Date() });
+
+      // Save in stressLevels collection
+      await setDoc(doc(db, "stressLevels", userId), {
+        stressLevel,
+        updatedAt: new Date(),
+        email: auth.currentUser?.email || "unknown",
+      });
+
+      // Save in moodEntries collection (historical data)
+      await addDoc(collection(db, "moodEntries"), {
+        uid: userId,
+        email: auth.currentUser?.email || "unknown",
+        stressLevel,
+        timestamp: new Date(),
+      });
+
       alert("Stress level saved successfully ✅");
       router.push("/student/dashboard");
     } catch (err) {
@@ -78,7 +102,9 @@ export default function StressMeter({ userId }) {
   };
 
   return (
-    <div className={`flex flex-col items-center justify-center w-full max-w-md rounded-xl p-8 space-y-6 transition-colors duration-500 ${bgColor()}`}>
+    <div
+      className={`flex flex-col items-center justify-center w-full max-w-md rounded-xl p-8 space-y-6 transition-colors duration-500 ${bgColor()}`}
+    >
       <h1 className="text-3xl font-bold text-gray-800 text-center">
         Daily Stress Meter
       </h1>

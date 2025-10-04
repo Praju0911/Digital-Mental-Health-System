@@ -1,0 +1,13 @@
+{
+  "pages": {
+    "/professional/chat/[sessionId]/page": [
+      "static/chunks/4ccd7c40558a0f79.js",
+      "static/chunks/f10d57d68ec5d470.css",
+      "static/chunks/29695ba0d0d8669e.js",
+      "static/chunks/eca8e26d1779e369.js",
+      "static/chunks/05b585e34a2b5614.js",
+      "static/chunks/a64243cf6f9f8264.js",
+      "static/chunks/turbopack-ea9236b7bd0e636e.js"
+    ]
+  }
+}

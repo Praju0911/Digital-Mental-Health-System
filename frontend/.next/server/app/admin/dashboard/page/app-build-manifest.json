@@ -1,0 +1,22 @@
+{
+  "pages": {
+    "/admin/dashboard/page": [
+      "static/chunks/b0d5b_next_dist_eb416c6f._.js",
+      "static/chunks/Digital-Mental-Health-System_frontend_src_app_favicon_ico_mjs_00254b64._.js",
+      "static/chunks/[root-of-the-server]__18f3dacb._.css",
+      "static/chunks/Digital-Mental-Health-System_frontend_src_app_layout_tsx_2e3bc34c._.js",
+      "static/chunks/b0d5b_next_dist_client_components_builtin_global-error_959cf387.js",
+      "static/chunks/Digital-Mental-Health-System_frontend_6a7701ba._.js",
+      "static/chunks/Digital-Mental-Health-System_frontend_src_app_admin_dashboard_page_jsx_959cf387._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_eb4d7b62._.js",
+      "static/chunks/b0d5b_next_dist_compiled_react-dom_e8b8c5a6._.js",
+      "static/chunks/b0d5b_next_dist_compiled_next-devtools_index_9cff37e4.js",
+      "static/chunks/b0d5b_next_dist_compiled_3b52b561._.js",
+      "static/chunks/b0d5b_next_dist_client_fcef093e._.js",
+      "static/chunks/b0d5b_next_dist_bd533982._.js",
+      "static/chunks/b0d5b_@swc_helpers_cjs_c2f5f313._.js",
+      "static/chunks/Digital-Mental-Health-System_frontend_a0ff3932._.js",
+      "static/chunks/turbopack-Digital-Mental-Health-System_frontend_2f8199bf._.js"
+    ]
+  }
+}
