@@ -1,8 +1,16 @@
 {
+<<<<<<< HEAD
   "/login/page": "app/login/page.js",
   "/page": "app/page.js",
   "/professional/chat/[sessionId]/page": "app/professional/chat/[sessionId]/page.js",
   "/professional/dashboard/page": "app/professional/dashboard/page.js",
   "/student/chat/[sessionId]/page": "app/student/chat/[sessionId]/page.js",
   "/student/dashboard/page": "app/student/dashboard/page.js"
+=======
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/api/admin/getUsers/route": "app/api/admin/getUsers/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/login/page": "app/login/page.js"
+>>>>>>> 704c297f38c9c955d70257c3eb8e31613e1cbd0a
 }

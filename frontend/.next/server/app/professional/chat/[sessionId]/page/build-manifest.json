@@ -2,6 +2,7 @@
   "devFiles": [],
   "ampDevFiles": [],
   "polyfillFiles": [
+<<<<<<< HEAD
     "static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js"
   ],
   "lowPriorityFiles": [],
@@ -15,6 +16,17 @@
     "static/chunks/node_modules_@swc_helpers_cjs_b3dc30d6._.js",
     "static/chunks/_a0ff3932._.js",
     "static/chunks/turbopack-_cdba956c._.js"
+=======
+    "static/chunks/a6dad97d9634a72d.js"
+  ],
+  "lowPriorityFiles": [],
+  "rootMainFiles": [
+    "static/chunks/29695ba0d0d8669e.js",
+    "static/chunks/eca8e26d1779e369.js",
+    "static/chunks/05b585e34a2b5614.js",
+    "static/chunks/a64243cf6f9f8264.js",
+    "static/chunks/turbopack-ea9236b7bd0e636e.js"
+>>>>>>> 704c297f38c9c955d70257c3eb8e31613e1cbd0a
   ],
   "pages": {},
   "ampFirstPages": []

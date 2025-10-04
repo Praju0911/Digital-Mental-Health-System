@@ -611,16 +611,31 @@ video {
 .justify-between {
   justify-content: space-between;
 }
+<<<<<<< HEAD
+=======
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-4 {
+  gap: 1rem;
+}
+.gap-8 {
+  gap: 2rem;
+}
+>>>>>>> 704c297f38c9c955d70257c3eb8e31613e1cbd0a
 .space-y-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
+<<<<<<< HEAD
 .space-y-4 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }
+=======
+>>>>>>> 704c297f38c9c955d70257c3eb8e31613e1cbd0a
 .space-y-6 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
@@ -685,6 +700,13 @@ video {
   background-color: rgb(209 213 219 / var(--tw-bg-opacity, 1));
 }
 .bg-gray-50 {
+<<<<<<< HEAD
+=======
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
+}
+.bg-green-200 {
+>>>>>>> 704c297f38c9c955d70257c3eb8e31613e1cbd0a
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
 }
@@ -737,6 +759,7 @@ video {
 .p-12 {
   padding: 3rem;
 }
+<<<<<<< HEAD
 .p-2 {
   padding: 0.5rem;
 }
@@ -746,6 +769,11 @@ video {
 .p-4 {
   padding: 1rem;
 }
+=======
+.p-3 {
+  padding: 0.75rem;
+}
+>>>>>>> 704c297f38c9c955d70257c3eb8e31613e1cbd0a
 .p-6 {
   padding: 1.5rem;
 }
@@ -860,10 +888,15 @@ video {
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+<<<<<<< HEAD
 .shadow-sm {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+=======
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+>>>>>>> 704c297f38c9c955d70257c3eb8e31613e1cbd0a
 }
 .transition {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;

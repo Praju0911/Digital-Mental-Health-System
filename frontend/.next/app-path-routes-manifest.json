@@ -1,0 +1,11 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/admin/dashboard/page": "/admin/dashboard",
+  "/favicon.ico/route": "/favicon.ico",
+  "/login/page": "/login",
+  "/page": "/",
+  "/professional/chat/[sessionId]/page": "/professional/chat/[sessionId]",
+  "/professional/dashboard/page": "/professional/dashboard",
+  "/student/chat/[sessionId]/page": "/student/chat/[sessionId]",
+  "/student/dashboard/page": "/student/dashboard"
+}

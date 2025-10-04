@@ -2,9 +2,10 @@
 import { useState, useEffect, useRef } from "react";
 import GaugeChart from "react-gauge-chart";
 import { db } from "@/lib/firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, addDoc, getDoc, collection } from "firebase/firestore";
 
-// The component now accepts an `onSubmitted` function as a prop
+// This is the merged component. It takes `userId` and `onSubmitted` as props
+// to work with your new dashboard flow.
 export default function StressMeter({ userId, onSubmitted }) {
   const [level, setLevel] = useState(0.5);
   const [displayLevel, setDisplayLevel] = useState(0.5);
@@ -31,12 +32,12 @@ export default function StressMeter({ userId, onSubmitted }) {
     loadStress();
   }, [userId]);
 
-  // Animate needle smoothly to the target level
+  // Animate needle smoothly
   useEffect(() => {
     const animate = () => {
       setDisplayLevel((prev) => {
         const diff = level - prev;
-        if (Math.abs(diff) < 0.001) return level; // Stop when close enough
+        if (Math.abs(diff) < 0.001) return level;
         return prev + diff * 0.1;
       });
       animationRef.current = requestAnimationFrame(animate);
@@ -44,31 +45,46 @@ export default function StressMeter({ userId, onSubmitted }) {
     animationRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationRef.current);
   }, [level]);
-  
-  // Update emoji based on the current animated level
+
+  // Update emoji dynamically
   useEffect(() => {
     if (displayLevel < 0.33) setEmoji("😊");
     else if (displayLevel < 0.66) setEmoji("😐");
     else setEmoji("😢");
   }, [displayLevel]);
 
-  // Change background color based on stress
+  // Dynamic background color
   const bgColor = () => {
     if (displayLevel < 0.33) return "bg-green-100";
     if (displayLevel < 0.66) return "bg-yellow-100";
     return "bg-red-100";
   };
 
-  // Save stress level to Firestore and notify the parent component
+  // *** MERGED SAVE FUNCTION ***
+  // This combines the best parts of both your and your friend's code.
   const handleSave = async () => {
-    if (!userId) return;
+    if (!userId) {
+      alert("User not found! Please login again.");
+      return;
+    }
     try {
       setSaving(true);
-      const stressLevel = Math.round(level * 10);
-      const docRef = doc(db, "stressLevels", userId);
-      await setDoc(docRef, { stressLevel, updatedAt: new Date() });
-      
-      // Call the onSubmitted function passed from the dashboard
+      const stressLevel = Math.round(level * 10); // scale 0-10
+
+      // 1. From your friend's code: Save the current stress level
+      await setDoc(doc(db, "stressLevels", userId), {
+        stressLevel,
+        updatedAt: new Date(),
+      });
+
+      // 2. From your friend's code: Save a historical entry for analytics
+      await addDoc(collection(db, "moodEntries"), {
+        uid: userId,
+        stressLevel,
+        timestamp: new Date(),
+      });
+
+      // 3. From your code: Notify the dashboard that the submission is complete
       if (onSubmitted) {
         onSubmitted();
       }
@@ -90,12 +106,12 @@ export default function StressMeter({ userId, onSubmitted }) {
       <GaugeChart
         id="animated-gauge"
         nrOfLevels={20}
-        colors={["#5BE12C", "#F5CD19", "#EA4228"]} // Green, Yellow, Red
+        colors={["#5BE12C", "#F5CD19", "#EA4228"]}
         percent={displayLevel}
         arcPadding={0.02}
         needleColor="#333333"
         needleBaseColor="#333333"
-        animate={false} // We handle animation manually for a smoother feel
+        animate={false}
         textColor="#000"
         formatTextValue={() => `${Math.round(displayLevel * 10)} / 10`}
       />

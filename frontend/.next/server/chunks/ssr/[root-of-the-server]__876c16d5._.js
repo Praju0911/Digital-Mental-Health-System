@@ -1,0 +1,3 @@
+module.exports=[64433,a=>{a.v({className:"inter_5972bc34-module__OU16Qa__className"})},12653,a=>{"use strict";a.s(["default",()=>f,"metadata",()=>e],12653);var b=a.i(42342),c=a.i(64433);let d={className:c.default.className,style:{fontFamily:"'Inter', 'Inter Fallback'",fontStyle:"normal"}};null!=c.default.variable&&(d.variable=c.default.variable);let e={title:"Mental Health Support",description:"A digital mental health platform for students."};function f({children:a}){return(0,b.jsx)("html",{lang:"en",suppressHydrationWarning:!0,children:(0,b.jsx)("body",{className:d.className,children:a})})}}];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__876c16d5._.js.map

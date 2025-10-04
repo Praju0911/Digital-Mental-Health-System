@@ -1,11 +1,12 @@
 {
   "app": {
-    "[project]/src/app/login/page": [
+    "[project]/Digital-Mental-Health-System/frontend/src/app/_not-found/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
-    "[project]/src/app/page": [
+    "[project]/Digital-Mental-Health-System/frontend/src/app/admin/dashboard/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
+<<<<<<< HEAD
     "[project]/src/app/professional/chat/[sessionId]/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
@@ -16,6 +17,9 @@
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
     "[project]/src/app/student/dashboard/page": [
+=======
+    "[project]/Digital-Mental-Health-System/frontend/src/app/login/page": [
+>>>>>>> 704c297f38c9c955d70257c3eb8e31613e1cbd0a
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ]
   },
