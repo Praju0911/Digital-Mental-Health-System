@@ -1,22 +1,21 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import GaugeChart from "react-gauge-chart";
 import { db } from "@/lib/firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
-export default function StressMeter({ userId }) {
-  const [level, setLevel] = useState(0.5); // target slider
-  const [displayLevel, setDisplayLevel] = useState(0.5); // animated needle
+// The component now accepts an `onSubmitted` function as a prop
+export default function StressMeter({ userId, onSubmitted }) {
+  const [level, setLevel] = useState(0.5);
+  const [displayLevel, setDisplayLevel] = useState(0.5);
   const [saving, setSaving] = useState(false);
   const [emoji, setEmoji] = useState("😐");
-  const router = useRouter();
   const animationRef = useRef();
 
   // Load previous stress level from Firestore
   useEffect(() => {
     const loadStress = async () => {
+      if (!userId) return;
       try {
         const docRef = doc(db, "stressLevels", userId);
         const docSnap = await getDoc(docRef);
@@ -32,12 +31,12 @@ export default function StressMeter({ userId }) {
     loadStress();
   }, [userId]);
 
-  // Animate needle smoothly
+  // Animate needle smoothly to the target level
   useEffect(() => {
     const animate = () => {
       setDisplayLevel((prev) => {
         const diff = level - prev;
-        if (Math.abs(diff) < 0.001) return level;
+        if (Math.abs(diff) < 0.001) return level; // Stop when close enough
         return prev + diff * 0.1;
       });
       animationRef.current = requestAnimationFrame(animate);
@@ -45,30 +44,35 @@ export default function StressMeter({ userId }) {
     animationRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationRef.current);
   }, [level]);
-
-  // Update emoji dynamically
+  
+  // Update emoji based on the current animated level
   useEffect(() => {
     if (displayLevel < 0.33) setEmoji("😊");
     else if (displayLevel < 0.66) setEmoji("😐");
     else setEmoji("😢");
   }, [displayLevel]);
 
-  // Dynamic background based on stress level
+  // Change background color based on stress
   const bgColor = () => {
-    if (displayLevel < 0.33) return "bg-green-200";
-    else if (displayLevel < 0.66) return "bg-yellow-200";
-    else return "bg-red-200";
+    if (displayLevel < 0.33) return "bg-green-100";
+    if (displayLevel < 0.66) return "bg-yellow-100";
+    return "bg-red-100";
   };
 
-  // Save stress level to Firestore
+  // Save stress level to Firestore and notify the parent component
   const handleSave = async () => {
+    if (!userId) return;
     try {
       setSaving(true);
-      const stressLevel = Math.round(level * 10); // scale 0-10
+      const stressLevel = Math.round(level * 10);
       const docRef = doc(db, "stressLevels", userId);
       await setDoc(docRef, { stressLevel, updatedAt: new Date() });
-      alert("Stress level saved successfully ✅");
-      router.push("/student/dashboard");
+      
+      // Call the onSubmitted function passed from the dashboard
+      if (onSubmitted) {
+        onSubmitted();
+      }
+
     } catch (err) {
       console.error("Error saving stress level:", err);
       alert("Error saving stress level ❌");
@@ -82,29 +86,19 @@ export default function StressMeter({ userId }) {
       <h1 className="text-3xl font-bold text-gray-800 text-center">
         Daily Stress Meter
       </h1>
-
-      {/* Emoji Feedback */}
       <div className="text-6xl animate-bounce">{emoji}</div>
-
-      {/* Gauge Chart */}
       <GaugeChart
         id="animated-gauge"
         nrOfLevels={20}
-        colors={[
-          "#00FF00", "#33FF00", "#66FF00", "#99FF00",
-          "#CCFF00", "#FFFF00", "#FFCC00", "#FF9900",
-          "#FF6600", "#FF3300", "#FF0000"
-        ]}
+        colors={["#5BE12C", "#F5CD19", "#EA4228"]} // Green, Yellow, Red
         percent={displayLevel}
         arcPadding={0.02}
         needleColor="#333333"
         needleBaseColor="#333333"
-        animate={false}
+        animate={false} // We handle animation manually for a smoother feel
         textColor="#000"
         formatTextValue={() => `${Math.round(displayLevel * 10)} / 10`}
       />
-
-      {/* Slider */}
       <input
         type="range"
         min={0}
@@ -114,11 +108,9 @@ export default function StressMeter({ userId }) {
         onChange={(e) => setLevel(parseFloat(e.target.value))}
         className="w-full h-2 bg-gray-300 rounded-lg accent-indigo-600"
       />
-
       <p className="text-lg font-semibold">
         Selected Level: {Math.round(level * 10)} / 10
       </p>
-
       <button
         onClick={handleSave}
         disabled={saving}
@@ -129,3 +121,4 @@ export default function StressMeter({ userId }) {
     </div>
   );
 }
+

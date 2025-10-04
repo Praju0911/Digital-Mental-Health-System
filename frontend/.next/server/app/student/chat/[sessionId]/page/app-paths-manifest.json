@@ -1,0 +1,3 @@
+{
+  "/student/chat/[sessionId]/page": "app/student/chat/[sessionId]/page.js"
+}

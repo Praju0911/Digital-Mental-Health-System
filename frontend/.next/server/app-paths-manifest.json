@@ -1,5 +1,8 @@
 {
   "/login/page": "app/login/page.js",
   "/page": "app/page.js",
+  "/professional/chat/[sessionId]/page": "app/professional/chat/[sessionId]/page.js",
+  "/professional/dashboard/page": "app/professional/dashboard/page.js",
+  "/student/chat/[sessionId]/page": "app/student/chat/[sessionId]/page.js",
   "/student/dashboard/page": "app/student/dashboard/page.js"
 }
