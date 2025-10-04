@@ -46,8 +46,9 @@ next-env.d.ts
 # Backend: Secrets
 # -----------------------
 backend/serviceAccountKey.json
-lib/key.json
+frontend/src/lib/key.json
 
 
 frontend/node_modules
 frontend/node_modules
+"frontend/src/lib/key.json" 
