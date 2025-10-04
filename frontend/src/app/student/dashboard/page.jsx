@@ -1,24 +1,29 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { auth, db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
-import { onAuthStateChanged, signOut } from 'firebase/auth'; // Import signOut
+import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import StressMeter from '@/app/components/StressMeter';
+import StressMeter from '@/app/components/StressMeter'; // Import the Stress Meter
 
 export default function StudentDashboard() {
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState('');
   const [userName, setUserName] = useState('Student');
-  const [stressSubmitted, setStressSubmitted] = useState(false);
+  const [stressSubmitted, setStressSubmitted] = useState(false); // Controls the view
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        const nameFromEmail = currentUser.email.split('@')[0];
-        setUserName(nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1));
+        // Fetch the anonymous username from Firestore to display in the header
+        const userDocRef = doc(db, "users", currentUser.uid);
+        getDoc(userDocRef).then(docSnap => {
+          if (docSnap.exists()) {
+            setUserName(docSnap.data().anonymousName);
+          }
+        });
       } else {
         router.push('/login');
       }
@@ -39,22 +44,29 @@ export default function StudentDashboard() {
     }
 
     setStatus('Sending request...');
+    // Fetch the user's anonymous name before creating the request
+    const userDocRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(userDocRef);
+    const anonymousName = userDoc.exists() ? userDoc.data().anonymousName : 'AnonymousStudent';
+
     const sessionRef = await addDoc(collection(db, "chatSessions"), {
         studentId: user.uid,
         createdAt: serverTimestamp(),
         status: 'pending'
     });
+
+    // Add the ANONYMOUS name to the queue, not the email
     await addDoc(collection(db, "chatQueue"), {
         studentId: user.uid,
-        studentEmail: user.email,
+        anonymousName: anonymousName,
         sessionId: sessionRef.id,
         requestedAt: serverTimestamp()
     });
+
     setStatus('Chat request sent! Waiting for a professional.');
     router.push(`/student/chat/${sessionRef.id}`);
   };
   
-  // --- NEW LOGOUT FUNCTION ---
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -76,7 +88,6 @@ export default function StudentDashboard() {
               {stressSubmitted ? "Thank you for checking in." : "Let's start with your daily check-in."}
             </p>
           </div>
-          {/* --- NEW LOGOUT BUTTON --- */}
           <button
             onClick={handleLogout}
             className="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 transition"
@@ -88,8 +99,10 @@ export default function StudentDashboard() {
 
       <main className="flex items-center justify-center py-8 px-4">
         {!stressSubmitted ? (
+          // Show Stress Meter and pass the onSubmitted function
           <StressMeter userId={user.uid} onSubmitted={() => setStressSubmitted(true)} />
         ) : (
+          // After submission, show the "Thank You" message and chat button
           <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center text-center max-w-md">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
                 <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>

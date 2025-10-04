@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { auth } from '@/lib/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'; // Import the Link component
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -15,18 +16,19 @@ export default function Login() {
     setError('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      if (email.includes('student')) {
-        router.push('/student/dashboard');
-      } else if (email.includes('professional')) {
+
+      // Improved Routing Logic:
+      // If it's a professional or admin, go to their dashboard.
+      // Otherwise, assume it's a student.
+      if (email.includes('professional')) {
         router.push('/professional/dashboard');
       } else if (email.includes('admin')) {
         router.push('/admin/dashboard');
       } else {
-         setError("Could not determine user role from email.");
+        router.push('/student/dashboard');
       }
     } catch (err) {
-      // More specific error messages
-      if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
         setError('Invalid email or password. Please try again.');
       } else {
         setError('An error occurred during login.');
@@ -40,12 +42,8 @@ export default function Login() {
       {/* Left side - Welcome message */}
       <div className="hidden lg:flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-12">
         <div className="w-16 h-16 bg-white/30 rounded-full flex items-center justify-center mb-6">
-            {/* Simple SVG icon for mental health / support */}
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
         </div>
-        
         <h1 className="text-4xl font-bold mb-4 text-center">Your Safe Space</h1>
         <p className="text-lg text-center text-indigo-100">
           Confidential and professional mental health support, right when you need it.
@@ -94,6 +92,14 @@ export default function Login() {
             </button>
             {error && <p className="text-red-500 text-sm mt-4 text-center">{error}</p>}
           </form>
+
+          {/* --- Link to Registration Page --- */}
+          <p className="text-center text-sm text-gray-500 mt-6">
+            Don't have an account?{' '}
+            <Link href="/register" className="font-semibold text-blue-600 hover:underline">
+              Sign Up
+            </Link>
+          </p>
         </div>
       </div>
     </div>
