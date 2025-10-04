@@ -3,22 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-  "dev": "npm run build:css && next dev --turbopack",
-  "build": "npm run build:css && next build --turbopack",
-  "start": "next start",
+    "dev": "npm run build:css && next dev --turbopack",
+    "build": "npm run build:css && next build --turbopack",
+    "start": "next start",
     "lint": "eslint",
     "tailwind:init": "node ./scripts/create-tailwind-config.js",
     "build:css": "node ./scripts/build-tailwind-css.js"
   },
   "dependencies": {
+    "axios": "^1.12.2",
     "firebase": "^12.3.0",
-    "next": "15.5.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "lodash": "^4.17.21",
+    "next": "^15.5.4",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-gauge-chart": "^0.5.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-  "@types/node": "^20",
+    "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",

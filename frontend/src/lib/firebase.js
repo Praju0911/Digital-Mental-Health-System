@@ -3,12 +3,13 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: "AIzaSyAE-k8r8F4II_5rBfTvh6BNzQDku7KE_Gg",
+  authDomain: "mental-health-87a9d.firebaseapp.com",
+  projectId: "mental-health-87a9d",
+  storageBucket: "mental-health-87a9d.firebasestorage.app",
+  messagingSenderId: "500649525001",
+  appId: "1:500649525001:web:60ff34cd3656aebcbe9dd8",
+  measurementId: "G-6EVCYEMBVS"
 };
 
 let app;
