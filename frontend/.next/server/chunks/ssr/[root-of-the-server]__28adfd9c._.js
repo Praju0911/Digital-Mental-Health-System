@@ -116,12 +116,13 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2
 ;
 ;
 const firebaseConfig = {
-    apiKey: ("TURBOPACK compile-time value", "AIzaSyAE-k8r8F4II_5rBfTvh6BNzQDku7KE_Gg"),
-    authDomain: ("TURBOPACK compile-time value", "mental-health-87a9d.firebaseapp.com"),
-    projectId: ("TURBOPACK compile-time value", "mental-health-87a9d"),
-    storageBucket: ("TURBOPACK compile-time value", "mental-health-87a9d.appspot.com"),
-    messagingSenderId: ("TURBOPACK compile-time value", "500649525001"),
-    appId: ("TURBOPACK compile-time value", "1:500649525001:web:60ff34cd3656aebcbe9dd8")
+    apiKey: "AIzaSyAE-k8r8F4II_5rBfTvh6BNzQDku7KE_Gg",
+    authDomain: "mental-health-87a9d.firebaseapp.com",
+    projectId: "mental-health-87a9d",
+    storageBucket: "mental-health-87a9d.firebasestorage.app",
+    messagingSenderId: "500649525001",
+    appId: "1:500649525001:web:60ff34cd3656aebcbe9dd8",
+    measurementId: "G-6EVCYEMBVS"
 };
 let app;
 if (!(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getApps"])().length) {
