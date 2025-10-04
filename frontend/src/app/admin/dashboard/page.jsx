@@ -14,7 +14,33 @@ export default function AdminDashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userHistory, setUserHistory] = useState([]);
+  const [alerts, setAlerts] = useState([]); // State for AI alerts
   const rowsPerPage = 10;
+
+  const fetchAllAdminData = async () => {
+    setLoading(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:8000';
+      
+      const [usersRes, alertsRes] = await Promise.all([
+        fetch(`${apiUrl}/api/admin-data`),
+        fetch(`${apiUrl}/api/get-alerts`)
+      ]);
+
+      if (!usersRes.ok) throw new Error('Failed to fetch user data');
+      const users = await usersRes.json();
+      setUsersData(users);
+
+      if (!alertsRes.ok) throw new Error('Failed to fetch alerts');
+      const alertData = await alertsRes.json();
+      setAlerts(alertData);
+
+    } catch (err) {
+      console.error("Error fetching admin dashboard data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -27,24 +53,10 @@ export default function AdminDashboard() {
     return () => unsubscribe();
   }, [router]);
 
-  // Fetch all admin data from the correct backend endpoint
+  // Fetches data when the user is first authenticated
   useEffect(() => {
-    const fetchAdminData = async () => {
-      setLoading(true);
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:8000';
-        const res = await fetch(`${apiUrl}/api/admin-data`);
-        if (!res.ok) throw new Error('Failed to fetch admin data');
-        const data = await res.json();
-        setUsersData(data);
-      } catch (err) {
-        console.error("Error fetching admin data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     if (user) {
-        fetchAdminData();
+        fetchAllAdminData();
     }
   }, [user]);
 
@@ -78,7 +90,6 @@ export default function AdminDashboard() {
   const highCount = usersData.filter(u => u.stressLevel > 7).length;
   const naCount = usersData.filter(u => u.stressLevel === "N/A").length;
 
-  // Fetch a single user's history from the correct backend endpoint
   const handleUserClick = async (user) => {
     setSelectedUser(user);
     try {
@@ -101,8 +112,42 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
-      <h1 className="text-3xl font-bold mb-4">Admin Dashboard - Student Stress Levels</h1>
-      <div className="flex flex-wrap gap-4 mb-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        {/* --- NEW: REFRESH BUTTON --- */}
+        <button
+          onClick={fetchAllAdminData}
+          disabled={loading}
+          className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 disabled:opacity-50 flex items-center"
+        >
+          <svg className={`w-5 h-5 mr-2 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h5M20 20v-5h-5M20 4l-4 4M4 20l4-4"></path></svg>
+          {loading ? 'Refreshing...' : 'Refresh Data'}
+        </button>
+      </div>
+
+
+      {/* --- CRITICAL ALERTS SECTION --- */}
+      {alerts.length > 0 && (
+        <div className="mb-8 p-6 bg-red-100 border-l-4 border-red-500 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-red-700 mb-4 flex items-center">
+             <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            Critical Alerts ({alerts.length})
+          </h2>
+          <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
+            {alerts.map(alert => (
+              <div key={alert.id} className="p-3 bg-white rounded-md border border-red-200 shadow-sm">
+                <p><strong>Anonymous Name:</strong> {alert.anonymousName}</p>
+                <p><strong>Student Email:</strong> <span className="font-semibold text-red-900">{alert.studentEmail}</span></p>
+                <p><strong>Flagged Message:</strong> <span className="italic">"{alert.flaggedMessage}"</span></p>
+                <p className="text-sm text-gray-500"><strong>Time:</strong> {new Date(alert.timestamp).toLocaleString()}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <h2 className="text-2xl font-semibold mb-4">Student Stress Levels Overview</h2>
+       <div className="flex flex-wrap gap-4 mb-4">
         <div className="px-4 py-2 bg-green-200 rounded font-semibold">Low Stress: {lowCount}</div>
         <div className="px-4 py-2 bg-yellow-200 rounded font-semibold">Medium Stress: {mediumCount}</div>
         <div className="px-4 py-2 bg-red-200 rounded font-semibold">High Stress: {highCount}</div>

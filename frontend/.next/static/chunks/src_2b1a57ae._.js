@@ -73,7 +73,28 @@ function AdminDashboard() {
     const [currentPage, setCurrentPage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(1);
     const [selectedUser, setSelectedUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [userHistory, setUserHistory] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [alerts, setAlerts] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]); // State for AI alerts
     const rowsPerPage = 10;
+    const fetchAllAdminData = async ()=>{
+        setLoading(true);
+        try {
+            const apiUrl = ("TURBOPACK compile-time value", "http://localhost:8000") || 'http://localhost:8000';
+            const [usersRes, alertsRes] = await Promise.all([
+                fetch("".concat(apiUrl, "/api/admin-data")),
+                fetch("".concat(apiUrl, "/api/get-alerts"))
+            ]);
+            if (!usersRes.ok) throw new Error('Failed to fetch user data');
+            const users = await usersRes.json();
+            setUsersData(users);
+            if (!alertsRes.ok) throw new Error('Failed to fetch alerts');
+            const alertData = await alertsRes.json();
+            setAlerts(alertData);
+        } catch (err) {
+            console.error("Error fetching admin dashboard data:", err);
+        } finally{
+            setLoading(false);
+        }
+    };
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "AdminDashboard.useEffect": ()=>{
             const unsubscribe = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["onAuthStateChanged"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["auth"], {
@@ -92,27 +113,11 @@ function AdminDashboard() {
     }["AdminDashboard.useEffect"], [
         router
     ]);
-    // Fetch all admin data from the correct backend endpoint
+    // Fetches data when the user is first authenticated
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "AdminDashboard.useEffect": ()=>{
-            const fetchAdminData = {
-                "AdminDashboard.useEffect.fetchAdminData": async ()=>{
-                    setLoading(true);
-                    try {
-                        const apiUrl = ("TURBOPACK compile-time value", "http://localhost:8000") || 'http://localhost:8000';
-                        const res = await fetch("".concat(apiUrl, "/api/admin-data"));
-                        if (!res.ok) throw new Error('Failed to fetch admin data');
-                        const data = await res.json();
-                        setUsersData(data);
-                    } catch (err) {
-                        console.error("Error fetching admin data:", err);
-                    } finally{
-                        setLoading(false);
-                    }
-                }
-            }["AdminDashboard.useEffect.fetchAdminData"];
             if (user) {
-                fetchAdminData();
+                fetchAllAdminData();
             }
         }
     }["AdminDashboard.useEffect"], [
@@ -135,7 +140,6 @@ function AdminDashboard() {
     const mediumCount = usersData.filter((u)=>u.stressLevel >= 4 && u.stressLevel <= 7).length;
     const highCount = usersData.filter((u)=>u.stressLevel > 7).length;
     const naCount = usersData.filter((u)=>u.stressLevel === "N/A").length;
-    // Fetch a single user's history from the correct backend endpoint
     const handleUserClick = async (user)=>{
         setSelectedUser(user);
         try {
@@ -157,18 +161,213 @@ function AdminDashboard() {
         children: "Loading..."
     }, void 0, false, {
         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-        lineNumber: 100,
+        lineNumber: 111,
         columnNumber: 20
     }, this);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "min-h-screen p-8 bg-gray-100",
         children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                className: "text-3xl font-bold mb-4",
-                children: "Admin Dashboard - Student Stress Levels"
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex justify-between items-center mb-6",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                        className: "text-3xl font-bold",
+                        children: "Admin Dashboard"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                        lineNumber: 116,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        onClick: fetchAllAdminData,
+                        disabled: loading,
+                        className: "bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 disabled:opacity-50 flex items-center",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                className: "w-5 h-5 mr-2 ".concat(loading ? 'animate-spin' : ''),
+                                fill: "none",
+                                stroke: "currentColor",
+                                viewBox: "0 0 24 24",
+                                xmlns: "http://www.w3.org/2000/svg",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                    strokeLinecap: "round",
+                                    strokeLinejoin: "round",
+                                    strokeWidth: "2",
+                                    d: "M4 4v5h5M20 20v-5h-5M20 4l-4 4M4 20l4-4"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                    lineNumber: 123,
+                                    columnNumber: 165
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                lineNumber: 123,
+                                columnNumber: 11
+                            }, this),
+                            loading ? 'Refreshing...' : 'Refresh Data'
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                        lineNumber: 118,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                lineNumber: 115,
+                columnNumber: 7
+            }, this),
+            alerts.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "mb-8 p-6 bg-red-100 border-l-4 border-red-500 rounded-lg shadow-md",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                        className: "text-2xl font-bold text-red-700 mb-4 flex items-center",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                className: "w-6 h-6 mr-2",
+                                fill: "none",
+                                stroke: "currentColor",
+                                viewBox: "0 0 24 24",
+                                xmlns: "http://www.w3.org/2000/svg",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                    strokeLinecap: "round",
+                                    strokeLinejoin: "round",
+                                    strokeWidth: "2",
+                                    d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                    lineNumber: 133,
+                                    columnNumber: 133
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                lineNumber: 133,
+                                columnNumber: 14
+                            }, this),
+                            "Critical Alerts (",
+                            alerts.length,
+                            ")"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                        lineNumber: 132,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "space-y-3 max-h-60 overflow-y-auto pr-2",
+                        children: alerts.map((alert)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "p-3 bg-white rounded-md border border-red-200 shadow-sm",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                children: "Anonymous Name:"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                                lineNumber: 139,
+                                                columnNumber: 20
+                                            }, this),
+                                            " ",
+                                            alert.anonymousName
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                        lineNumber: 139,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                children: "Student Email:"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                                lineNumber: 140,
+                                                columnNumber: 20
+                                            }, this),
+                                            " ",
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "font-semibold text-red-900",
+                                                children: alert.studentEmail
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                                lineNumber: 140,
+                                                columnNumber: 52
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                        lineNumber: 140,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                children: "Flagged Message:"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                                lineNumber: 141,
+                                                columnNumber: 20
+                                            }, this),
+                                            " ",
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "italic",
+                                                children: [
+                                                    '"',
+                                                    alert.flaggedMessage,
+                                                    '"'
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                                lineNumber: 141,
+                                                columnNumber: 54
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                        lineNumber: 141,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-sm text-gray-500",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                children: "Time:"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                                lineNumber: 142,
+                                                columnNumber: 54
+                                            }, this),
+                                            " ",
+                                            new Date(alert.timestamp).toLocaleString()
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                        lineNumber: 142,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, alert.id, true, {
+                                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                                lineNumber: 138,
+                                columnNumber: 15
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                        lineNumber: 136,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/admin/dashboard/page.jsx",
+                lineNumber: 131,
+                columnNumber: 9
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                className: "text-2xl font-semibold mb-4",
+                children: "Student Stress Levels Overview"
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                lineNumber: 104,
+                lineNumber: 149,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -182,7 +381,7 @@ function AdminDashboard() {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                        lineNumber: 106,
+                        lineNumber: 151,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -193,7 +392,7 @@ function AdminDashboard() {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                        lineNumber: 107,
+                        lineNumber: 152,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -204,7 +403,7 @@ function AdminDashboard() {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                        lineNumber: 108,
+                        lineNumber: 153,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -215,14 +414,14 @@ function AdminDashboard() {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                        lineNumber: 109,
+                        lineNumber: 154,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                lineNumber: 105,
-                columnNumber: 7
+                lineNumber: 150,
+                columnNumber: 8
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "flex flex-wrap gap-4 mb-4",
@@ -235,7 +434,7 @@ function AdminDashboard() {
                         className: "px-4 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500"
                     }, void 0, false, {
                         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                        lineNumber: 112,
+                        lineNumber: 157,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -248,7 +447,7 @@ function AdminDashboard() {
                                 children: "All Levels"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                lineNumber: 120,
+                                lineNumber: 165,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -256,7 +455,7 @@ function AdminDashboard() {
                                 children: "Low (0-3)"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                lineNumber: 121,
+                                lineNumber: 166,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -264,7 +463,7 @@ function AdminDashboard() {
                                 children: "Medium (4-7)"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                lineNumber: 122,
+                                lineNumber: 167,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -272,7 +471,7 @@ function AdminDashboard() {
                                 children: "High (8-10)"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                lineNumber: 123,
+                                lineNumber: 168,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -280,19 +479,19 @@ function AdminDashboard() {
                                 children: "N/A"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                lineNumber: 124,
+                                lineNumber: 169,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                        lineNumber: 119,
+                        lineNumber: 164,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                lineNumber: 111,
+                lineNumber: 156,
                 columnNumber: 7
             }, this),
             loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -300,7 +499,7 @@ function AdminDashboard() {
                 children: "Loading student data..."
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                lineNumber: 127,
+                lineNumber: 172,
                 columnNumber: 18
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                 children: [
@@ -318,7 +517,7 @@ function AdminDashboard() {
                                                 children: "Email"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                                lineNumber: 133,
+                                                lineNumber: 178,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -326,7 +525,7 @@ function AdminDashboard() {
                                                 children: "UID"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                                lineNumber: 134,
+                                                lineNumber: 179,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -334,7 +533,7 @@ function AdminDashboard() {
                                                 children: "Stress Level"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                                lineNumber: 135,
+                                                lineNumber: 180,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -342,18 +541,18 @@ function AdminDashboard() {
                                                 children: "Last Updated"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                                lineNumber: 136,
+                                                lineNumber: 181,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                        lineNumber: 132,
+                                        lineNumber: 177,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                    lineNumber: 131,
+                                    lineNumber: 176,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -366,7 +565,7 @@ function AdminDashboard() {
                                                     children: user.email
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                                    lineNumber: 142,
+                                                    lineNumber: 187,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -374,7 +573,7 @@ function AdminDashboard() {
                                                     children: user.uid
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                                    lineNumber: 143,
+                                                    lineNumber: 188,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -385,7 +584,7 @@ function AdminDashboard() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                                    lineNumber: 144,
+                                                    lineNumber: 189,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -393,29 +592,29 @@ function AdminDashboard() {
                                                     children: user.updatedAt ? new Date(user.updatedAt).toLocaleString() : "-"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                                    lineNumber: 145,
+                                                    lineNumber: 190,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, user.uid, true, {
                                             fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                            lineNumber: 141,
+                                            lineNumber: 186,
                                             columnNumber: 19
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                    lineNumber: 139,
+                                    lineNumber: 184,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                            lineNumber: 130,
+                            lineNumber: 175,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                        lineNumber: 129,
+                        lineNumber: 174,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -428,7 +627,7 @@ function AdminDashboard() {
                                 children: "Prev"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                lineNumber: 152,
+                                lineNumber: 197,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -440,7 +639,7 @@ function AdminDashboard() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                lineNumber: 153,
+                                lineNumber: 198,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -450,13 +649,13 @@ function AdminDashboard() {
                                 children: "Next"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                lineNumber: 154,
+                                lineNumber: 199,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                        lineNumber: 151,
+                        lineNumber: 196,
                         columnNumber: 11
                     }, this)
                 ]
@@ -474,7 +673,7 @@ function AdminDashboard() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                            lineNumber: 161,
+                            lineNumber: 206,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -483,14 +682,14 @@ function AdminDashboard() {
                             children: "×"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                            lineNumber: 162,
+                            lineNumber: 207,
                             columnNumber: 13
                         }, this),
                         userHistory.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             children: "No stress entries yet."
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                            lineNumber: 163,
+                            lineNumber: 208,
                             columnNumber: 41
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
                             className: "space-y-2 max-h-80 overflow-y-auto",
@@ -505,7 +704,7 @@ function AdminDashboard() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                            lineNumber: 167,
+                                            lineNumber: 212,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -513,39 +712,39 @@ function AdminDashboard() {
                                             children: new Date(entry.timestamp).toLocaleString()
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                            lineNumber: 168,
+                                            lineNumber: 213,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, idx, true, {
                                     fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                                    lineNumber: 166,
+                                    lineNumber: 211,
                                     columnNumber: 19
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                            lineNumber: 164,
+                            lineNumber: 209,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                    lineNumber: 160,
+                    lineNumber: 205,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/dashboard/page.jsx",
-                lineNumber: 159,
+                lineNumber: 204,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/admin/dashboard/page.jsx",
-        lineNumber: 103,
+        lineNumber: 114,
         columnNumber: 5
     }, this);
 }
-_s(AdminDashboard, "f4CAuhrq3x8LweICpodyjLy8gT8=", false, function() {
+_s(AdminDashboard, "XZf7YAROsuAGdYxtPuhl31Ht+Wg=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];
