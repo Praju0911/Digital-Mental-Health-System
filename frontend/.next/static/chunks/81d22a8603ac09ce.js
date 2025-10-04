@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,89942,(e,t,i)=>{t.exports=e.r(30755)},14475,e=>{"use strict";e.s(["default",()=>u]);var t=e.i(90678),i=e.i(68960),r=e.i(89942);function u(){let e=(0,r.useRouter)();return(0,i.useEffect)(()=>{e.push("/login")},[e]),(0,t.jsx)("p",{children:"Redirecting..."})}}]);
